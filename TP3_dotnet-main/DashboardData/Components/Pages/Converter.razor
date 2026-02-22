@@ -1,0 +1,28 @@
+@page "/converter"
+@rendermode InteractiveServer
+
+<h3>Convertisseur de Temperature</h3>
+
+<div class="mb-3">
+    <label>Temperature en Fahrenheit: </label>
+    <input type="number" class="form-control" @bind="TemperatureF" />
+</div>
+
+<div class="alert alert-success">
+ Resultat en Celsius: <strong>@( Math.Round((TemperatureF - 32) * 5/9, 2))</strong> C
+</div>
+
+<div class="mb-3">
+    <label>Temperature en Celsius: </label>
+    <input type="number" class="form-control" @bind="TemperatureC" />
+</div>
+
+<div class="alert alert-success">
+ Resultat en Fahrenheit: <strong>@( Math.Round((TemperatureC * 9/5) +32, 2))</strong> F
+</div>
+
+@code
+{
+    private double TemperatureF = 100;
+    private double TemperatureC = 100;
+}

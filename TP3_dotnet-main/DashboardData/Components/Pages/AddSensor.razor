@@ -1,0 +1,47 @@
+@page "/add-sensor"
+@rendermode InteractiveServer
+@using DashboardData.Models
+@using DashboardData.Services
+@inject ISensorService SensorService
+@inject NavigationManager NavManager
+
+<h3>Ajouter un Capteur</h3>
+
+<div class="card p-3 mb-4">
+    
+    <div class="mb-3">
+        <label>Nom du capteur</label>
+        <input class="form-control" @bind="newSensor.Name" />
+    </div>
+
+    <div class="mb-3">
+        <label>Valeur</label>
+        <input type="number" class="form-control" @bind="newSensor.Value" />
+    </div>
+
+</div>
+<button class="btn btn-success me-2" @onclick="SaveSensor">
+        Ajouter
+    </button>
+
+    <button class="btn btn-secondary" @onclick="GoBack">
+        Annuler
+    </button>
+
+@code {
+
+    private SensorData newSensor = new();
+
+    private void SaveSensor()
+    {
+        SensorService.AddSensor(newSensor);
+
+        // Retour au dashboard
+        NavManager.NavigateTo("/dashboard");
+    }
+
+    private void GoBack()
+    {
+        NavManager.NavigateTo("/dashboard");
+    }
+}

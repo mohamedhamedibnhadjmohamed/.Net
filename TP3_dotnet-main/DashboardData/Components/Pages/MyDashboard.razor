@@ -1,0 +1,137 @@
+@page "/dashboard"
+@rendermode InteractiveServer
+@using DashboardData.Services
+@inject ISensorService SensorService
+@inject NavigationManager NavManager
+@inject UserCounterService S1
+@inject UserCounterService S2
+
+
+<PageTitle> Mon Dashboard Title </PageTitle>
+
+<h1> Tableau de bord </h1>
+
+<div class="alert alert-info">
+Bienvenue sur l'interface de pilotage.
+Nous sommes le : <strong>@DateTime.Now.ToString("dd MMMM yyyy")</strong>
+</div>
+
+<p>
+status du systeme : 
+@if (IsSystemOK)
+{
+    <span class="badge bg-success">Operationnel</span>
+}
+else
+{
+    <span class="badge bg-danger">Erreur Critique</span>
+}
+</p>
+
+<button class="btn btn-primary" @onclick="RefreshSystem">
+    <span class="bi bi-arrow-repeat">Actualiser le status</span>
+</button>
+
+<div class="mt-3 card card-body">
+    Logs : @LastLog
+</div>
+
+@using DashboardData.Models
+
+@if (_isLoading)
+{
+    <p><em>Chargement des donnees...</em></p>
+}
+else
+{
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Valeur</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sensor in _sensors)
+        {
+            <tr>
+                <td>@sensor.Name</td>
+                <td>@sensor.Value</td>
+
+            </tr>
+        }
+    </tbody>
+
+
+</table>
+
+<button class="btn btn-success mb-3" @onclick="GoToAddSensor">
+    Ajouter un capteur
+</button>
+
+
+<div class="card p-3 mb-3">
+    <h5>Expérience Transient, Compteur Utilisateur</h5>
+
+    <p>S1 Count : <strong>@S1.Count</strong></p>
+    <p>S2 Count : <strong>@S2.Count</strong></p>
+
+    <button class="btn btn-primary mb-4" @onclick="IncrementS1">
+        Increment S1
+    </button>
+
+    <button class="btn btn-success" @onclick="IncrementS2">
+        Increment S2
+    </button>
+</div>
+
+
+
+}
+
+@code {
+    private bool IsSystemOK= true;
+    private int RequestCount = 0;
+    private string LastLog = "Rien a signaler";
+    private List<SensorData> _sensors = new();
+    private bool _isLoading = true;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _sensors = await SensorService.GetSensorsAsync();
+        _isLoading = false;
+    }
+
+    private void RefreshSystem()
+    {
+        RequestCount++;
+        var rnd= new Random();
+        IsSystemOK = rnd.Next(0,10)>2;
+
+        if (IsSystemOK)
+            LastLog = $"Check {RequestCount} : Tous va bien.";
+        else
+            LastLog = $"Check {RequestCount} : ANOMALIE DETECTEE !";
+                   
+    }
+
+    private void GoToAddSensor()
+    {
+        NavManager.NavigateTo("/add-sensor");
+    }
+
+    private void IncrementS1()
+    {
+        S1.Increment();
+    }
+
+    private void IncrementS2()
+    {
+        S2.Increment();
+    }
+
+
+}
+

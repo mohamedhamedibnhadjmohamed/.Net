@@ -1,0 +1,34 @@
+@page "/logs"
+@rendermode InteractiveServer
+
+<h3>Logs:</h3>
+
+<p>
+    <strong>@NbErreurs</strong> erreurs sur <strong>@NbLogs</strong> logs
+</p>
+
+<ul>
+    @foreach (var log in SystemLogs){
+        <li class="@(log.Contains("Erreur") ? "text-danger" : "text-success")" >
+        @log
+        </li>
+    }        
+</ul>
+
+
+@code
+{
+    private List<string> SystemLogs = new()
+    {
+        "10:00 - Demarrage du systeme",
+        "10:05 - Erreur : Connexion base de donnees echouee",
+        "10:06 - Reconnexion reussie",
+        "10:15 - Erreur : Timeout API externe",
+        "10:20 - Sauvegarde automatique effectuee",
+
+    };
+
+    int NbLogs => SystemLogs.Count;
+
+    int NbErreurs => SystemLogs.Count(log => log.Contains("Erreur"));
+}
