@@ -12,9 +12,40 @@
 <button class="btn btn-danger mb-3" @onclick="LoadCritical">Alertes (> 30.0)</button>
 <a href="/edit-sensor" class="btn btn-success mb-3">+ Nouveau Capteur</a>
 
-@if (Sensors == null)
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Total Sondes</h5>
+                <h2>@TotalSensors</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Moyenne Globale</h5>
+                <h2>@Average.ToString("F1") °C</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">Valeur Maximale</h5>
+                <h2>@MaxValue.ToString("F1") °C</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (isLoading)
 {
-    <p>Loading...</p>
+    <p>Chargement en cours...</p>
+}
+else if (Sensors == null)
+{
+    <p>Erreur lors du chargement des données.</p>
 }
 else
 {
@@ -47,7 +78,8 @@ else
 }
 
 @code {
-    private List<SensorData> Sensors;
+    private List<SensorData>? Sensors;
+    private bool isLoading = true;
 
     private int TotalSensors;
     private double Average;
@@ -56,24 +88,55 @@ else
     protected override async Task OnInitializedAsync()
     {
         await LoadAll();
+        isLoading = false;
+        StateHasChanged();
     }
 
     private async Task LoadAll()
     {
-        Sensors = await SensorService.GetSensorsAsync();
-        TotalSensors = await SensorService.GetTotalCountAsync();
-        Average = await SensorService.GetAverageValueAsync();
-        MaxValue = await SensorService.GetMaxValueAsync();
+        try
+        {
+            Sensors = await SensorService.GetSensorsAsync();
+            TotalSensors = await SensorService.GetTotalCountAsync();
+            Average = await SensorService.GetAverageValueAsync();
+            MaxValue = await SensorService.GetMaxValueAsync();
+        }
+        catch (Exception ex)
+        {
+            Sensors = null;
+            Console.WriteLine($"Erreur lors du chargement: {ex.Message}");
+        }
+        StateHasChanged();
     }
 
     private async Task LoadCritical()
     {
-        Sensors = await SensorService.GetCriticalSensorsAsync(30.0);
+        try
+        {
+            Sensors = await SensorService.GetCriticalSensorsAsync(30.0);
+            // Rafraîchir les KPIs même pour les capteurs critiques
+            TotalSensors = await SensorService.GetTotalCountAsync();
+            Average = await SensorService.GetAverageValueAsync();
+            MaxValue = await SensorService.GetMaxValueAsync();
+        }
+        catch (Exception ex)
+        {
+            Sensors = null;
+            Console.WriteLine($"Erreur lors du chargement des capteurs critiques: {ex.Message}");
+        }
+        StateHasChanged();
     }
 
     private async Task DeleteSensor(int id)
     {
-        await SensorService.DeleteSensorAsync(id);
-        await LoadAll();
+        try
+        {
+            await SensorService.DeleteSensorAsync(id);
+            await LoadAll();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erreur lors de la suppression: {ex.Message}");
+        }
     }
 }

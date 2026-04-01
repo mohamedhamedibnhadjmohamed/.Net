@@ -1,5 +1,4 @@
-@page "/edit-sensor"
-@page "/edit-sensor/{Id:int}"
+@page "/edit-sensor/{Id?}"
 @rendermode InteractiveServer
 @using DashboardData.Models
 @using DashboardData.Services
@@ -7,7 +6,7 @@
 @inject NavigationManager NavigationManager
 
 <!-- Titre dynamique selon le mode -->
-<h3>@(Id.HasValue ? "Modifier le Capteur" : "Ajouter un Nouveau Capteur")</h3>
+<h3>@(!string.IsNullOrEmpty(Id) ? "Modifier le Capteur" : "Ajouter un Nouveau Capteur")</h3>
 
 @if (currentSensor == null)
 {
@@ -53,7 +52,7 @@ else
 
 @code {
     [Parameter]
-    public int? Id { get; set; }
+    public string? Id { get; set; }
 
     private SensorData? currentSensor;
     private List<Location> Locations = new();
@@ -64,10 +63,10 @@ else
         Locations = await SensorService.GetLocationsAsync();
 
         // 2. Initialisation du capteur courant
-        if (Id.HasValue)
+        if (!string.IsNullOrEmpty(Id) && int.TryParse(Id, out int sensorId))
         {
             // Mode Édition : On récupère les données de la base
-            currentSensor = await SensorService.GetSensorByIdAsync(Id.Value);
+            currentSensor = await SensorService.GetSensorByIdAsync(sensorId);
         }
         
         // Mode Création (ou si l'ID fourni est introuvable) : on instancie un objet vide
@@ -80,7 +79,9 @@ else
     private async Task HandleValidSubmit()
     {
         // Cette méthode n'est appelée QUE si le formulaire est valide
-        if (Id.HasValue)
+        int? id = !string.IsNullOrEmpty(Id) && int.TryParse(Id, out int sensorId) ? sensorId : null;
+        
+        if (id.HasValue)
         {
             // Mise à jour (UPDATE)
             await SensorService.UpdateSensorAsync(currentSensor);
