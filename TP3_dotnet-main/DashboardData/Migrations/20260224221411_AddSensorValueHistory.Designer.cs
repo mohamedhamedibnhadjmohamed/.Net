@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DashboardData.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260219084043_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260224221411_AddSensorValueHistory")]
+    partial class AddSensorValueHistory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,12 +52,9 @@ namespace DashboardData.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<double>("Value")

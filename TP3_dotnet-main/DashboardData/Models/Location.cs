@@ -1,17 +1,18 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace DashboardData.Models;
-
-public class Location
+﻿
+ using System.ComponentModel.DataAnnotations;
+namespace DashboardData.Models
 {
-    [Key]
-    public int Id { get; set; }
+    public class Location
+    {
+        [Key] 
+        public int Id { get; set; }
+        [Required][StringLength(100)]
+        public string Name { get; set; }
+        public string Building { get; set; }
 
-    [Required] [StringLength(100)]
-    public string Name { get; set; }  // Ex: "Salle Serveur"
+        //====== Entity Framework Core relationships ======
 
-    public string? Building { get; set; } // Ex: "Bâtiment A"
-
-    // Navigation : Un emplacement contient PLUSIEURS capteurs
-    public ICollection<SensorData> Sensors { get; set; } = new List<SensorData>();
+        // One-to-Many relationship with SensorData: 1 location can have multiple sensors, but each sensor belongs to only 1 location
+        public ICollection<SensorData> Sensors { get; set; } = new List<SensorData>();
+    }
 }

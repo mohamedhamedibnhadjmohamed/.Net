@@ -3,6 +3,7 @@ using System;
 using DashboardData.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DashboardData.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260228204641_ModifSensorValueHistory")]
+    partial class ModifSensorValueHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.3");
@@ -49,7 +52,6 @@ namespace DashboardData.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Type")
@@ -84,7 +86,7 @@ namespace DashboardData.Migrations
 
                     b.HasIndex("SensorDataId");
 
-                    b.ToTable("SensorValueHistories");
+                    b.ToTable("SensorValueHistor");
                 });
 
             modelBuilder.Entity("DashboardData.Models.Tag", b =>

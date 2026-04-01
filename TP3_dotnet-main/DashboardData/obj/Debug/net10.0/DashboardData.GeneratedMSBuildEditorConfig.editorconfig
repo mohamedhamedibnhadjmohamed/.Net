@@ -46,6 +46,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3VudGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Projets/.Net/TP3_dotnet-main/DashboardData/Components/Pages/EditSensor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFZGl0U2Vuc29yLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Projets/.Net/TP3_dotnet-main/DashboardData/Components/Pages/Error.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -76,6 +80,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Projets/.Net/TP3_dotnet-main/DashboardData/Components/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xfSW1wb3J0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projets/.Net/TP3_dotnet-main/DashboardData/Pages/EditSensor.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWRpdFNlbnNvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projets/.Net/TP3_dotnet-main/DashboardData/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Projets/.Net/TP3_dotnet-main/DashboardData/Components/Layout/MainLayout.razor]

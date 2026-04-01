@@ -1,29 +1,99 @@
+﻿using DashboardData.Data;
 using DashboardData.Models;
-
-namespace DashboardData.Services;
-
-public class SensorService : ISensorService
+using Microsoft.EntityFrameworkCore;
+#nullable enable
+namespace DashboardData.Services
 {
-    private List<SensorData> _sensors = new ()
+    public class SensorService : ISensorService
     {
-        new SensorData { Name= "Temp_Salon", Value=22.5},
-        new SensorData { Name= "Hum_Cuisine", Value=45.0},
-        new SensorData { Name= "CO2_Bureau", Value=800},
-        new SensorData { Name= "Temp_Bureau", Value=24.0},
-        new SensorData { Name= "Temp_Ext", Value=12.0}   
-    };
-    
+        private readonly AppDbContext _dbContext;
+        public SensorService(AppDbContext dbContext)
+        {
+            this._dbContext = dbContext;
+        }
 
-    public async Task<List<SensorData>> GetSensorsAsync()
-    {
-        await Task.Delay(2000);
-        return _sensors;
+        public async Task<List<SensorData>> GetSensorsAsync()
+        {
+            // EF Core traduit Include par un JOIN SQL vers la table Location
+            return await _dbContext.Sensors
+                .Include(s => s.Location)
+                .ToListAsync();
+        }
+
+        public async Task<List<Location>> GetLocationsAsync()
+        {
+            return await _dbContext.Locations.ToListAsync();
+        }
+
+        public async Task<SensorData?> GetSensorByIdAsync(int id)
+        {
+            // FindAsync cherche directement par la Clé Primaire (Id)
+            return await _dbContext.Sensors.FindAsync(id);
+        }
+
+        public async Task AddSensorAsync(SensorData sensor)
+        {
+            sensor.LastUpdate = DateTime.Now;
+            
+            // Historisation de la valeur initiale (TP5)
+            sensor.SensorValueHistories.Add(new SensorValueHistor {
+                MeasuredValue = sensor.Value,
+                Timestamp = DateTime.Now
+            });
+
+            _dbContext.Sensors.Add(sensor);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateSensorAsync(SensorData sensor)
+        {
+            sensor.LastUpdate = DateTime.Now; // Mise à jour de la date
+            
+            // Ajout à l'historique lors d'une modification (TP5)
+            sensor.SensorValueHistories.Add(new SensorValueHistor {
+                MeasuredValue = sensor.Value,
+                Timestamp = DateTime.Now
+            });
+
+            _dbContext.Sensors.Update(sensor);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteSensorAsync(int id)
+        {
+            var sensor = await _dbContext.Sensors.FindAsync(id);
+            if (sensor != null)
+            {
+                _dbContext.Sensors.Remove(sensor);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<SensorData>> GetCriticalSensorsAsync(double threshold)
+        {
+            return await _dbContext.Sensors
+                .Include(s => s.Location)
+                .Where(s => s.Value > threshold) 
+                .OrderByDescending(s => s.Value) 
+                .ToListAsync();                  
+        }
+
+        public async Task<double> GetAverageValueAsync()
+        {
+            if (!await _dbContext.Sensors.AnyAsync()) return 0;
+
+            return await _dbContext.Sensors.AverageAsync(s => s.Value);
+        }
+
+        public async Task<double> GetMaxValueAsync()
+        {
+            if (!await _dbContext.Sensors.AnyAsync()) return 0;
+            return await _dbContext.Sensors.MaxAsync(s => s.Value);
+        }
+
+        public async Task<int> GetTotalCountAsync()
+        {
+            return await _dbContext.Sensors.CountAsync();
+        }
     }
-
-    public void AddSensor(SensorData sensor)
-    {
-        _sensors.Add(sensor);
-    }
-
-
 }

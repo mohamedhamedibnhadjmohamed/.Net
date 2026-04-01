@@ -44,8 +44,8 @@ namespace DashboardData.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    Type = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Type = table.Column<string>(type: "TEXT", nullable: true),
                     Value = table.Column<double>(type: "REAL", nullable: false),
                     LastUpdate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     LocationId = table.Column<int>(type: "INTEGER", nullable: false)

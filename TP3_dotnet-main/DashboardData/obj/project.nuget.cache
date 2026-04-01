@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "wLmpl+9ggmM=",
+  "dgSpecHash": "5L8EXer9SaQ=",
   "success": true,
   "projectFilePath": "D:\\Projets\\.Net\\TP3_dotnet-main\\DashboardData\\DashboardData.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mhbm\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
-    "C:\\Users\\mhbm\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.2\\microsoft.aspnetcore.app.internal.assets.10.0.2.nupkg.sha512",
+    "C:\\Users\\mhbm\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.4\\microsoft.aspnetcore.app.internal.assets.10.0.4.nupkg.sha512",
     "C:\\Users\\mhbm\\.nuget\\packages\\microsoft.build.framework\\18.0.2\\microsoft.build.framework.18.0.2.nupkg.sha512",
     "C:\\Users\\mhbm\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.11.0\\microsoft.codeanalysis.analyzers.3.11.0.nupkg.sha512",
     "C:\\Users\\mhbm\\.nuget\\packages\\microsoft.codeanalysis.common\\5.0.0\\microsoft.codeanalysis.common.5.0.0.nupkg.sha512",
